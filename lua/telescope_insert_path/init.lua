@@ -64,6 +64,8 @@ local function get_relative_path(file, dir)
 
   if absolute_path then
     return absfile
+  elseif num_parents == 0 and path_actions.dot_prefix then
+    return "./" .. string.sub(absfile, string.len(searchdir) + 2)
   else
     return string.rep("../", num_parents) .. string.sub(absfile, string.len(searchdir) + 2)
   end
@@ -259,6 +261,10 @@ path_actions.setup = function(args)
     path_actions.source_dir = source
   else
     path_actions.source_dir = get_git_root_or_cwd()
+  end
+
+  if args.dot_prefix then
+      path_actions.dot_prefix = true
   end
 
   return path_actions
